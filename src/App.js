@@ -1,7 +1,7 @@
 import { Component } from "react";
 import "./App.css";
 
-import Modal from "./components/Modal";
+// import Modal from "./components/Modal";
 import ImagesGalery from "./components/ImageGallery/ImageGallery";
 // import Searchbar from "./components/Searchbar";
 class App extends Component {
@@ -9,28 +9,27 @@ class App extends Component {
     images: [],
     filter: "",
     showModal: false,
-    query: ''
+    query: '',
+    bigImg: '',
+
   };
 
 
 
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-    }));
-  };
+  // toggleModal = () => {
+  //   this.setState(({ showModal }) => ({
+  //     showModal: !showModal,
+  //   }))
+  //   this.setState({bigImg: ''});
+  // };
 
-  // onChangeQuery = query => {
-  //   console.log(query);
-  // }
 
   render() {
-    const { showModal } = this.state;
+    // const { showModal } = this.state;
 
     return (
       <>
-      {/* <Searchbar onSubnit={this.onChangeQuery()}/> */}
-        <button type='button' onClick={this.toggleModal}>
+        {/* <button type='button' onClick={this.toggleModal}>
           OpenModal
         </button>
         {showModal && (
@@ -39,7 +38,7 @@ class App extends Component {
               close
             </button>
           </Modal>
-        )}
+        )} */}
         <ImagesGalery/>
       </>
     );

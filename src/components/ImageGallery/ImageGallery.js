@@ -2,6 +2,8 @@ import { Component } from "react";
 import fetchImagesApi from "../../services/images-api";
 import axios from "axios";
 import Searchbar from "../Searchbar";
+import Modal from "../Modal/Modal";
+
 
 axios.defaults.baseURL = "https://pixabay.com";
 
@@ -11,11 +13,15 @@ class ImageGallery extends Component {
     imagesPage: 1,
     searchQuery: "",
     isLoading: false,
+    showModal: false,
     error: null,
+    bigImg: '',
   };
+
   componentDidUpdate(prevProps, prevState) {
     if (prevState.searchQuery !== this.state.searchQuery) {
       this.fetchImages();
+      
     }
   }
 
@@ -44,8 +50,26 @@ class ImageGallery extends Component {
 
   };
 
+
+
+ onOpenBigImages(largeImageURL){
+    this.setState({ bigImg: largeImageURL, showModal: true, });
+
+
+  }
+
+
+
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }))
+    this.setState({bigImg: ''});
+  };
+
+
   render() {
-    const { images, isLoading, error } = this.state;
+    const { images, isLoading, error, showModal } = this.state;
     const loadingButtonAndPreloader = images.length > 0 && !isLoading;
 
     return (
@@ -54,11 +78,16 @@ class ImageGallery extends Component {
 
         <Searchbar onSubmit={this.onChangeQuery} />
 
+        {showModal && (
+                <Modal onClose={this.toggleModal} img={this.state.bigImg}/>
 
+        
+        )}
         <ul>
-          {images.map(({ id, webformatURL, tags }) => (
+          {images.map(({ id, webformatURL, largeImageURL, tags }) => (
             <li key={id}>
-              <img src={webformatURL} alt={tags}></img>
+              <img src={webformatURL} alt={tags} onClick={() => this.onOpenBigImages(largeImageURL)}></img>
+
             </li>
           ))}
         </ul>
