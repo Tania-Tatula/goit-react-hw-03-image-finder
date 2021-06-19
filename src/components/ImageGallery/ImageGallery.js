@@ -88,12 +88,8 @@ class ImageGallery extends Component {
         )}
         <ul className="ImageGallery">
             
-            {!images.length? <h2>Please, enter a valid image title</h2>: images.map(({ id, webformatURL, largeImageURL, tags }) => (
-            <li key={id} className="ImageGalleryItem">
-              <img className="ImageGalleryItem-image" src={webformatURL} alt={tags} onClick={() => this.onOpenBigImages(largeImageURL)}></img>
-
-            </li>
-          ))
+            {!images.length? <h2>Please, enter a valid image title</h2> : 
+             <ImageGalleryItem images={this.state.images}/>
         }
     
         </ul>
