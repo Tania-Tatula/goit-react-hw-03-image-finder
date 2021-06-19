@@ -3,7 +3,9 @@ import fetchImagesApi from "../../services/images-api";
 import axios from "axios";
 import Searchbar from "../Searchbar";
 import Modal from "../Modal/Modal";
+import ImageGalleryItem from './ImageGalleryItem';
 
+import '../styles.css';
 
 axios.defaults.baseURL = "https://pixabay.com";
 
@@ -73,7 +75,8 @@ class ImageGallery extends Component {
     const loadingButtonAndPreloader = images.length > 0 && !isLoading;
 
     return (
-      <>
+        <>
+      <div className="">
       {error && <h2>Sorry, error</h2>}
 
         <Searchbar onSubmit={this.onChangeQuery} />
@@ -83,22 +86,36 @@ class ImageGallery extends Component {
 
         
         )}
-        <ul>
-          {images.map(({ id, webformatURL, largeImageURL, tags }) => (
-            <li key={id}>
-              <img src={webformatURL} alt={tags} onClick={() => this.onOpenBigImages(largeImageURL)}></img>
+        <ul className="ImageGallery">
+            
+            {!images.length? <h2>Please, enter a valid image title</h2>: images.map(({ id, webformatURL, largeImageURL, tags }) => (
+            <li key={id} className="ImageGalleryItem">
+              <img className="ImageGalleryItem-image" src={webformatURL} alt={tags} onClick={() => this.onOpenBigImages(largeImageURL)}></img>
 
             </li>
-          ))}
+          ))
+        }
+    
         </ul>
+       
 
-        {isLoading && <h2>загрузка...</h2>}
+      </div>
+      <div className="ButtonBlock">
 
-        {loadingButtonAndPreloader && (
-          <button type='button' onClick={this.fetchImages}>
-            Load more
-          </button>
-        )}
+      {isLoading && <div class="preloader">
+  <div class="preloader__row">
+    <div class="preloader__item"></div>
+    <div class="preloader__item"></div>
+  </div>
+</div>}
+
+{loadingButtonAndPreloader && (
+  <button className="Button" type='button' onClick={this.fetchImages}>
+    Load more
+  </button>
+)}
+</div>
+
       </>
     );
   }
