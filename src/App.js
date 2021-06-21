@@ -7,17 +7,14 @@ class App extends Component {
     images: [],
     filter: "",
     showModal: false,
-    query: '',
-    bigImg: '',
-
+    query: "",
+    bigImg: "",
   };
 
-
   render() {
-
     return (
       <>
-         <ImagesGalery/>
+        <ImagesGalery />
       </>
     );
   }

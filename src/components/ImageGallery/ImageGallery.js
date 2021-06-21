@@ -3,9 +3,11 @@ import fetchImagesApi from "../../services/images-api";
 import axios from "axios";
 import Searchbar from "../Searchbar";
 import Modal from "../Modal/Modal";
-import ImageGalleryItem from './ImageGalleryItem';
+import ImageGalleryItem from "./ImageGalleryItem";
+import Button from "../Button/Button";
+import Loader from "../Loader";
 
-import '../styles.css';
+import "../styles.css";
 
 axios.defaults.baseURL = "https://pixabay.com";
 
@@ -17,18 +19,22 @@ class ImageGallery extends Component {
     isLoading: false,
     showModal: false,
     error: null,
-    bigImg: '',
+    bigImg: "",
   };
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.searchQuery !== this.state.searchQuery) {
       this.fetchImages();
-      
     }
   }
 
   onChangeQuery = (query) => {
-    this.setState({ searchQuery: query, imagesPage: 1, images: [], error: null, });
+    this.setState({
+      searchQuery: query,
+      imagesPage: 1,
+      images: [],
+      error: null,
+    });
   };
 
   fetchImages = () => {
@@ -39,79 +45,65 @@ class ImageGallery extends Component {
       imagesPage,
     };
 
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
 
-    fetchImagesApi(options).then((images) => {
-      this.setState((prevState) => ({
-        images: [...prevState.images, ...images],
-        imagesPage: prevState.imagesPage + 1,
-      }));
-    }).catch(error => this.setState({error}))
-    .finally(()=> this.setState({isLoading: false}))
-    
-
+    fetchImagesApi(options)
+      .then((images) => {
+        this.setState((prevState) => ({
+          images: [...prevState.images, ...images],
+          imagesPage: prevState.imagesPage + 1,
+        }));
+      })
+      .catch((error) => this.setState({ error }))
+      .finally(() => this.setState({ isLoading: false }));
   };
 
-
-
- onOpenBigImages(largeImageURL){
-    this.setState({ bigImg: largeImageURL, showModal: true, });
-
-
-  }
-
-
+  onOpenBigImages = (largeImageURL) => {
+    this.setState({
+      bigImg: largeImageURL,
+      showModal: true,
+    });
+  };
 
   toggleModal = () => {
     this.setState(({ showModal }) => ({
       showModal: !showModal,
-    }))
-    this.setState({bigImg: ''});
+    }));
+    this.setState({ bigImg: "" });
   };
-
 
   render() {
     const { images, isLoading, error, showModal } = this.state;
     const loadingButtonAndPreloader = images.length > 0 && !isLoading;
 
     return (
-        <>
-      <div className="">
-      {error && <h2>Sorry, error</h2>}
+      <>
+        <div>
+          {error && <h2>Sorry, error</h2>}
 
-        <Searchbar onSubmit={this.onChangeQuery} />
+          <Searchbar onSubmit={this.onChangeQuery} />
 
-        {showModal && (
-                <Modal onClose={this.toggleModal} img={this.state.bigImg}/>
+          {showModal && (
+            <Modal onClose={this.toggleModal} img={this.state.bigImg} />
+          )}
+          <ul className='ImageGallery'>
+            {!images.length ? (
+              <h2>Please, enter a valid image title</h2>
+            ) : (
+              <ImageGalleryItem
+                images={this.state.images}
+                onClick={this.onOpenBigImages}
+              />
+            )}
+          </ul>
+        </div>
+        <div className='ButtonBlock'>
+          {isLoading && <Loader />}
 
-        
-        )}
-        <ul className="ImageGallery">
-            
-            {!images.length? <h2>Please, enter a valid image title</h2> : 
-             <ImageGalleryItem images={this.state.images}/>
-        }
-    
-        </ul>
-       
-
-      </div>
-      <div className="ButtonBlock">
-
-      {isLoading && <div class="preloader">
-  <div class="preloader__row">
-    <div class="preloader__item"></div>
-    <div class="preloader__item"></div>
-  </div>
-</div>}
-
-{loadingButtonAndPreloader && (
-  <button className="Button" type='button' onClick={this.fetchImages}>
-    Load more
-  </button>
-)}
-</div>
-
+          {loadingButtonAndPreloader && (
+            <Button onOpenCloseButton={this.fetchImages} />
+          )}
+        </div>
       </>
     );
   }
